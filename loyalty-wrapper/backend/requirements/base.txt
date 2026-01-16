@@ -1,0 +1,7 @@
+fastapi[standard]==0.115.6
+pydantic-settings==2.7.1
+beanie==1.29.0
+PyJWT==2.10.1
+bcrypt==4.2.1
+python-dateutil==2.9.0.post0
+celery[redis]==5.5.3

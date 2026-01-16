@@ -1,0 +1,4949 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server celler server.",
+        "title": "Smart Gas API Specification",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/api/v1/auth/login": {
+            "post": {
+                "description": "Authorize users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authorization"
+                ],
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "Auth Body",
+                        "name": "Auth",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.AuthRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Access token \u0026 Refresh Token",
+                        "schema": {
+                            "$ref": "#/definitions/dto.JwtResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User or password incorrect",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/refresh-token": {
+            "post": {
+                "description": "Authorize users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authorization"
+                ],
+                "summary": "Refresh Token",
+                "parameters": [
+                    {
+                        "description": "Auth Body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.JwtRefreshRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Access token \u0026 Refresh Token",
+                        "schema": {
+                            "$ref": "#/definitions/dto.JwtResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, token malformed, token invalid, expired, etc",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/campaigns": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get Campaigns with pagination",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Campaign List",
+                "parameters": [
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search promotion",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated Campaigns",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.PaginationResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.CampaignListResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Create campaign with given parameters",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Create Campaign",
+                "parameters": [
+                    {
+                        "description": "Campaign body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CampaignCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "406": {
+                        "description": "Foreign key for permission, group, station not exists",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/campaigns/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get campaign detail",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Get Campaign detail",
+                "parameters": [
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Campaign Detail",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CampaignDetailResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Update campaign with given parameters",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Update Campaign",
+                "parameters": [
+                    {
+                        "description": "Campaign body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CampaignUpdateRequest"
+                        }
+                    },
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "406": {
+                        "description": "Foreign key for permission, group, station not exists",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/customers/all": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "List of all customers",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "List all customers",
+                "responses": {
+                    "200": {
+                        "description": "Customers",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.ListAllCustomersResponse"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/customers/level": {
+            "get": {
+                "description": "List of all customers",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "List all customers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customer Level",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CustomerLevelAssignedResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not level in this month",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/customers/payment-methods": {
+            "get": {
+                "description": "Get customer's payment methods",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Customer cards",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User's profile",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/schemas.PaymentMethod"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/customers/payment-methods-swit": {
+            "get": {
+                "description": "Get customer's payment methods swit",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Customer cards SWIT",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User's profile",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/schemas.PaymentMethod"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/customers/payment-methods/{card_id}": {
+            "delete": {
+                "description": "Delete a card from customer",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Delete a customer card",
+                "parameters": [
+                    {
+                        "minLength": 1,
+                        "type": "string",
+                        "description": "id",
+                        "name": "card_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK if deleted",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/elegibility/customers/levels": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Paginate Customer Levels",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Elegibility"
+                ],
+                "summary": "Customer Levels List",
+                "parameters": [
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Lookup in customer levels",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customer Levels Paginated",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.PaginationResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.CustomerLevelListResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/elegibility/customers/levels/": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Create customer level with given parameters",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Elegibility"
+                ],
+                "summary": "Create customer level",
+                "parameters": [
+                    {
+                        "description": "Customer Level create body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ElegibilityCreateCustomerLevelRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CustomerLevelCreateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "406": {
+                        "description": "Foreign key for level, customer not exists",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "409": {
+                        "description": "Duplicated entry",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/elegibility/customers/levels/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Update customer level with given parameters",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Elegibility"
+                ],
+                "summary": "Update customer level",
+                "parameters": [
+                    {
+                        "description": "Customer Level Update body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ElegibilityUpdateCustomerLevelRequest"
+                        }
+                    },
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "406": {
+                        "description": "Foreign key for level, customer not exists",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "409": {
+                        "description": "Duplicated entry",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/elegibility/levels": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Paginate Levels",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Elegibility"
+                ],
+                "summary": "List Levels",
+                "parameters": [
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Lookup in levels",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Levels Paginated",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.PaginationResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.LevelListResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Create Elegibility level with given parameters",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Elegibility"
+                ],
+                "summary": "Create Elegibility Level",
+                "parameters": [
+                    {
+                        "description": "Elegibility body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.EelegibilityLevelCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.LevelCreateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "409": {
+                        "description": "Duplicated entry",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/elegibility/levels/all": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "List of all levels",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Elegibility"
+                ],
+                "summary": "List all levels",
+                "responses": {
+                    "200": {
+                        "description": "Levels",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.LevelListAllResponse"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/elegibility/levels/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Update Elegibility Level with given parameters",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Elegibility"
+                ],
+                "summary": "Update Elegibility Level",
+                "parameters": [
+                    {
+                        "description": "Campaign body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ElegibilityLevelUpdatesRequest"
+                        }
+                    },
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "409": {
+                        "description": "Duplicated entry",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/gas-pumps": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get paginated gas pumps",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gas Pumps"
+                ],
+                "summary": "Gas Pump List",
+                "parameters": [
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search in gas stations name, ip it looks up through id, name ip",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Gas station paginated",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.PaginationResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.GasPumpListResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Create Gas Pump",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gas Pumps"
+                ],
+                "summary": "Gas Pump Create",
+                "parameters": [
+                    {
+                        "description": "Gas Pump Body",
+                        "name": "Data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.GasPumpCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Gas station create response",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GasPumpCreateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "406": {
+                        "description": "Not acceptable value for gas_station_id, id does not exist in DB",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "409": {
+                        "description": "Duplicated entry",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/gas-pumps/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get Gas station detail",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gas Pumps"
+                ],
+                "summary": "Gas Pump Detail",
+                "parameters": [
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Gas station detail",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GasPumpGetResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Update Gas station",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gas Pumps"
+                ],
+                "summary": "Gas Pump Update",
+                "parameters": [
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Gas station values",
+                        "name": "Data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.GasPumpUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Record Updated",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "406": {
+                        "description": "Not acceptable value for gas_station_id, id does not exist in DB",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "409": {
+                        "description": "Duplicated entry",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/gas-pumps/{id}/customer": {
+            "get": {
+                "description": "Get Gas pump for customer when confirming",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gas Pumps"
+                ],
+                "summary": "Gas Pump Detail customer",
+                "parameters": [
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Gas station detail",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GasPumpGetDetailForCustomerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/gas-stations": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get paginated gas stations",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gas Stations"
+                ],
+                "summary": "Gas Station List",
+                "parameters": [
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search in gas stations, it looks up through id, name ip",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Gas station paginated",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.PaginationResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.GasStationListResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Create Gas Station",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gas Stations"
+                ],
+                "summary": "Gas Station Create",
+                "parameters": [
+                    {
+                        "description": "Gas Station Body",
+                        "name": "Data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.GasStationCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Gas station create response",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GasStationCreateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "409": {
+                        "description": "Duplicated entry",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/gas-stations/all": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get all gas stations",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gas Stations"
+                ],
+                "summary": "Gas Station List All",
+                "responses": {
+                    "200": {
+                        "description": "Gas stations",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.GasStationListAllResponse"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/gas-stations/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get Gas station detail",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gas Stations"
+                ],
+                "summary": "Gas Station Detail",
+                "parameters": [
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Gas station detail",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GasStationGetResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Update Gas station",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Gas Stations"
+                ],
+                "summary": "Gas Station Update",
+                "parameters": [
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Gas station values",
+                        "name": "Data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.GasStationUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Record Updated",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "409": {
+                        "description": "Duplicated entry",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payments": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Payment List",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Payment List",
+                "parameters": [
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Lookup in payments",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payments paginated",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.PaginationResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.PaymentListResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payments/actions/{id}": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Manual action for payment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Do payment action",
+                "parameters": [
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Do action for payment",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.DoPaymentActionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "done",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payments/create-intent": {
+            "post": {
+                "description": "Create Payment intent in order to refuel gas",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Create Payment intent",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Create payment intent to charge fuel",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreatePaymentIntentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Payment intent information",
+                        "schema": {
+                            "$ref": "#/definitions/dto.PaymentCrateIntentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "402": {
+                        "description": "Payment Required, Unsufficient funds",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "406": {
+                        "description": "Not fuel type in gas pump",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payments/create-intent-operation": {
+            "post": {
+                "description": "Creaate Payment intent from opertion app with employee credentials",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Create Payment intent from operation app",
+                "parameters": [
+                    {
+                        "description": "Create payment intent to charge fuel from operation app",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreatePaymentIntentOperationRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Gas Station ID",
+                        "name": "X-GAS-STATION-ID",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee ID",
+                        "name": "X-EMPLOYEE-ID",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Employee NIP",
+                        "name": "X-EMPLOYEE-NIP",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Payment intent information",
+                        "schema": {
+                            "$ref": "#/definitions/dto.PaymentCrateIntentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "402": {
+                        "description": "Payment Required, Unsufficient funds",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Whether gas station or pump not found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "406": {
+                        "description": "Not fuel type in gas pump",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payments/invoicing/{id}": {
+            "post": {
+                "description": "Make invoicing for a customer payment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Invoice payment",
+                "parameters": [
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Body for invocing",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.SignInvoiceRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response with uuid",
+                        "schema": {
+                            "$ref": "#/definitions/dto.SignInvoiceResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "406": {
+                        "description": "Not accepted",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "409": {
+                        "description": "Already invoiced",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "412": {
+                        "description": "Data sent bad",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payments/invoicing/{id}/pdf": {
+            "get": {
+                "description": "Get PDF File from already generated invoice",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Get PDF from invoice",
+                "parameters": [
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "PDF",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetInvoicePDFResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payments/invoicing/{id}/resend": {
+            "post": {
+                "description": "Resend invoice previously invoiced",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Invoice payment Resend",
+                "parameters": [
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Body for invocing",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResendInvoiceRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payments/provider": {
+            "get": {
+                "description": "Payment provider for stripe or swit",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Payment provider",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment Provider",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetPaymentProviderResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payments/{id}/customer-detail": {
+            "get": {
+                "description": "Payment detail for customer",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Payment Detail Customer",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment Detail for customer",
+                        "schema": {
+                            "$ref": "#/definitions/dto.PaymentDetailCustomer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Payment id not found in db, payment not paid yet",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/payments/{id}/events": {
+            "post": {
+                "description": "Add event to payment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Add event to payment",
+                "parameters": [
+                    {
+                        "maxLength": 39,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Add event for payment",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.AddEventBodyRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "App Key",
+                        "name": "APP-KEY",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Api Key",
+                        "name": "API-KEY",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "402": {
+                        "description": "Payment Required",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Payment id not found in db",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "406": {
+                        "description": "Already Served",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/permissions/all": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get all available permissions",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Get all permissions",
+                "responses": {
+                    "200": {
+                        "description": "Gas stations",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.PermissionListAllResponse"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/permissions/all-groups": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get all available permissions groups",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Get all permission groups",
+                "responses": {
+                    "200": {
+                        "description": "Gas stations",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.GroupListAllResponse"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/settings": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Endpoint to gather all settings",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Get All settings",
+                "responses": {
+                    "200": {
+                        "description": "All settings",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.SettinGetAllResponse"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, token malformed, token invalid, expired, etc",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/settings/": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Update or create specific setting",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Update setting",
+                "parameters": [
+                    {
+                        "description": "Setting Create or Update Body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.SettingCreateBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated or created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/synchronizations": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get paginated synchronizations",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Synchronization"
+                ],
+                "summary": "Synchronization List",
+                "parameters": [
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "gas_pumps",
+                            "gas_stations",
+                            "customer_levels"
+                        ],
+                        "type": "string",
+                        "name": "type",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Synchronizations List",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.PaginationResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.SynchronizationListResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/synchronizations/last": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get last synchronization",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Synchronization"
+                ],
+                "summary": "Last Synchronization",
+                "parameters": [
+                    {
+                        "enum": [
+                            "gas_pumps",
+                            "gas_stations",
+                            "customer_levels"
+                        ],
+                        "type": "string",
+                        "name": "type",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Access token \u0026 Refresh Token",
+                        "schema": {
+                            "$ref": "#/definitions/dto.SynchronizationGetLastSyncResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/synchronizations/now": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Synchronize gas pumps, gas stations or all",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Synchronization"
+                ],
+                "summary": "Sync Now",
+                "parameters": [
+                    {
+                        "description": "Sync type",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.SynchronizationNowQueryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Synchronized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "423": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/synchronizations/{id}/details": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get paginated synchronizations detail List",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Synchronization"
+                ],
+                "summary": "Synchronization Detail List",
+                "parameters": [
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Synchronizations Detail List",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.PaginationResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.SynchronizationListDetailResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Paginate users",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "List users",
+                "parameters": [
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Lookup in users",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Users Paginated",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.PaginationResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/dto.UserListResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Create user with given parameters",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create User",
+                "parameters": [
+                    {
+                        "description": "User body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "406": {
+                        "description": "Foreign key for permission, group, station not exists",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "409": {
+                        "description": "Email already taken",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/me": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get user's information",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "User Me",
+                "responses": {
+                    "200": {
+                        "description": "User's profile",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserMeResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get user detail by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user detail",
+                "parameters": [
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User detail",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserDetailResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Update a user by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user",
+                "parameters": [
+                    {
+                        "maxLength": 36,
+                        "minLength": 36,
+                        "type": "string",
+                        "description": "uuid4 id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User body",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, failed on body, form, query...",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BadRequestMessage"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "406": {
+                        "description": "Foreign key for permission, group, station not exists",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/healthcheck": {
+            "get": {
+                "description": "Authorize users",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "HealthCheck"
+                ],
+                "summary": "Show health check",
+                "responses": {
+                    "200": {
+                        "description": "Shows healthy if server is running",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GeneralMessage"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.AddEventBodyRequest": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "amount_charged": {
+                    "type": "number"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "serving",
+                        "serving_paused",
+                        "served"
+                    ]
+                }
+            }
+        },
+        "dto.AuthRequestBody": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "hello@world.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "yourpassword"
+                }
+            }
+        },
+        "dto.BadRequestMessage": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CampaignCreateRequest": {
+            "type": "object",
+            "required": [
+                "discount",
+                "name",
+                "valid_from",
+                "valid_to"
+            ],
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "discount": {
+                    "type": "number"
+                },
+                "gas_stations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "valid_from": {
+                    "type": "string"
+                },
+                "valid_to": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CampaignDetailResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "discount": {
+                    "type": "number"
+                },
+                "gas_stations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "valid_from": {
+                    "type": "string"
+                },
+                "valid_to": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CampaignListResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "discount": {
+                    "type": "number"
+                },
+                "gas_stations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "valid_from": {
+                    "type": "string"
+                },
+                "valid_to": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CampaignUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "discount": {
+                    "type": "number"
+                },
+                "gas_stations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "valid_from": {
+                    "type": "string"
+                },
+                "valid_to": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreatePaymentIntentOperationRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "charge_type",
+                "fuel_type",
+                "pump_number"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number",
+                    "minimum": 10
+                },
+                "card_key": {
+                    "type": "string"
+                },
+                "charge_type": {
+                    "type": "string",
+                    "enum": [
+                        "customer",
+                        "card_key"
+                    ]
+                },
+                "external_customer_id": {
+                    "type": "string"
+                },
+                "fuel_type": {
+                    "type": "string",
+                    "enum": [
+                        "regular",
+                        "premium",
+                        "diesel"
+                    ]
+                },
+                "pump_number": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreatePaymentIntentRequest": {
+            "type": "object",
+            "required": [
+                "charge_type",
+                "fuel_type",
+                "gas_pump_id",
+                "payment_provider"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number",
+                    "minimum": 10
+                },
+                "charge_type": {
+                    "type": "string",
+                    "enum": [
+                        "by_liter",
+                        "by_total"
+                    ]
+                },
+                "cvv": {
+                    "type": "string"
+                },
+                "fuel_type": {
+                    "type": "string",
+                    "enum": [
+                        "regular",
+                        "premium",
+                        "diesel"
+                    ]
+                },
+                "gas_pump_id": {
+                    "type": "string",
+                    "example": "23ae8c18-4d7a-41a3-a148-8ae2d0a75690"
+                },
+                "last_4": {
+                    "type": "string"
+                },
+                "payment_provider": {
+                    "type": "string",
+                    "enum": [
+                        "stripe",
+                        "swit",
+                        "debit"
+                    ]
+                },
+                "source_id": {
+                    "type": "string"
+                },
+                "total_liter": {
+                    "type": "number",
+                    "minimum": 0.5
+                }
+            }
+        },
+        "dto.CustomerLevelAssignedResponse": {
+            "type": "object",
+            "properties": {
+                "discount": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "levels_enabled": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CustomerLevelCreateResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CustomerLevelListResponse": {
+            "type": "object",
+            "properties": {
+                "customer_id": {
+                    "type": "string"
+                },
+                "elegibility_level_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "validity_month": {
+                    "type": "integer"
+                },
+                "validity_year": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.DoPaymentActionRequest": {
+            "type": "object",
+            "required": [
+                "action"
+            ],
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "refund",
+                        "preset"
+                    ]
+                }
+            }
+        },
+        "dto.EelegibilityLevelCreateRequest": {
+            "type": "object",
+            "required": [
+                "discount",
+                "min_amount",
+                "min_charges",
+                "name"
+            ],
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "discount": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "min_amount": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "min_charges": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ElegibilityCreateCustomerLevelRequest": {
+            "type": "object",
+            "required": [
+                "customer_id",
+                "elegibility_level_id",
+                "validity_month",
+                "validity_year"
+            ],
+            "properties": {
+                "customer_id": {
+                    "type": "string",
+                    "example": "23ae8c18-4d7a-41a3-a148-8ae2d0a75690"
+                },
+                "elegibility_level_id": {
+                    "type": "string",
+                    "example": "23ae8c18-4d7a-41a3-a148-8ae2d0a75690"
+                },
+                "validity_month": {
+                    "type": "integer",
+                    "maximum": 12,
+                    "minimum": 1
+                },
+                "validity_year": {
+                    "type": "integer",
+                    "maximum": 2030,
+                    "minimum": 2015
+                }
+            }
+        },
+        "dto.ElegibilityLevelUpdatesRequest": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "discount": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "min_amount": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "min_charges": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ElegibilityUpdateCustomerLevelRequest": {
+            "type": "object",
+            "properties": {
+                "customer_id": {
+                    "type": "string",
+                    "example": "23ae8c18-4d7a-41a3-a148-8ae2d0a75690"
+                },
+                "elegibility_level_id": {
+                    "type": "string",
+                    "example": "23ae8c18-4d7a-41a3-a148-8ae2d0a75690"
+                },
+                "validity_month": {
+                    "type": "integer",
+                    "maximum": 12,
+                    "minimum": 1
+                },
+                "validity_year": {
+                    "type": "integer",
+                    "maximum": 2030,
+                    "minimum": 2015
+                }
+            }
+        },
+        "dto.GasPumpCreateRequest": {
+            "type": "object",
+            "required": [
+                "external_id",
+                "gas_station_id",
+                "number"
+            ],
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "diesel_price": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "external_id": {
+                    "type": "string"
+                },
+                "gas_station_id": {
+                    "type": "string",
+                    "example": "23ae8c18-4d7a-41a3-a148-8ae2d0a75690"
+                },
+                "number": {
+                    "type": "string",
+                    "minLength": 2,
+                    "example": "01, 02, 03..."
+                },
+                "premium_price": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "regular_price": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        },
+        "dto.GasPumpCreateResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "23ae8c18-4d7a-41a3-a148-8ae2d0a75690"
+                }
+            }
+        },
+        "dto.GasPumpGetDetailForCustomerResponse": {
+            "type": "object",
+            "properties": {
+                "campaign": {
+                    "type": "object",
+                    "properties": {
+                        "discount": {
+                            "type": "number"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "diesel_price": {
+                    "type": "number"
+                },
+                "discount_type": {
+                    "type": "string"
+                },
+                "gas_station": {
+                    "type": "object",
+                    "properties": {
+                        "city": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "neighborhood": {
+                            "type": "string"
+                        },
+                        "outside_number": {
+                            "type": "string"
+                        },
+                        "state": {
+                            "type": "string"
+                        },
+                        "street": {
+                            "type": "string"
+                        },
+                        "zip_code": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "number": {
+                    "type": "string"
+                },
+                "premium_price": {
+                    "type": "number"
+                },
+                "regular_price": {
+                    "type": "number"
+                }
+            }
+        },
+        "dto.GasPumpGetResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "diesel_price": {
+                    "type": "number"
+                },
+                "external_id": {
+                    "type": "string"
+                },
+                "gas_station": {
+                    "type": "object",
+                    "properties": {
+                        "external_id": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "number": {
+                    "type": "string"
+                },
+                "premium_price": {
+                    "type": "number"
+                },
+                "regular_price": {
+                    "type": "number"
+                }
+            }
+        },
+        "dto.GasPumpListResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "diesel_price": {
+                    "type": "number"
+                },
+                "external_id": {
+                    "type": "string"
+                },
+                "gas_station_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "23ae8c18-4d7a-41a3-a148-8ae2d0a75690"
+                },
+                "number": {
+                    "type": "string"
+                },
+                "premium_price": {
+                    "type": "number"
+                },
+                "regular_price": {
+                    "type": "number"
+                }
+            }
+        },
+        "dto.GasPumpUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "diesel_price": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "external_id": {
+                    "type": "string",
+                    "example": "12"
+                },
+                "gas_station_id": {
+                    "type": "string",
+                    "example": "23ae8c18-4d7a-41a3-a148-8ae2d0a75690"
+                },
+                "number": {
+                    "type": "string",
+                    "minLength": 2,
+                    "example": "01, 02, 03..."
+                },
+                "premium_price": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "regular_price": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        },
+        "dto.GasStationCreateRequest": {
+            "type": "object",
+            "required": [
+                "cre_permission",
+                "external_id",
+                "ip",
+                "name"
+            ],
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "cre_permission": {
+                    "type": "string",
+                    "example": "PL/01/01..."
+                },
+                "external_id": {
+                    "type": "string"
+                },
+                "ip": {
+                    "type": "string",
+                    "example": "192.168.100.100"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 3,
+                    "example": "Guerrero"
+                }
+            }
+        },
+        "dto.GasStationCreateResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "23ae8c18-4d7a-41a3-a148-8ae2d0a75690"
+                }
+            }
+        },
+        "dto.GasStationGetResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "cre_permission": {
+                    "type": "string"
+                },
+                "external_id": {
+                    "type": "string",
+                    "example": "13"
+                },
+                "ip": {
+                    "type": "string",
+                    "example": "192.168.100.100"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Guerrero"
+                }
+            }
+        },
+        "dto.GasStationListAllResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "23ae8c18-4d7a-41a3-a148-8ae2d0a75690"
+                },
+                "ip": {
+                    "type": "string",
+                    "example": "192.168.100.100"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Guerrero"
+                }
+            }
+        },
+        "dto.GasStationListResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "cre_permission": {
+                    "type": "string"
+                },
+                "external_id": {
+                    "type": "string",
+                    "example": "13"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "23ae8c18-4d7a-41a3-a148-8ae2d0a75690"
+                },
+                "ip": {
+                    "type": "string",
+                    "example": "192.168.100.100"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Guerrero"
+                }
+            }
+        },
+        "dto.GasStationUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "cre_permission": {
+                    "type": "string",
+                    "example": "PL/01/01..."
+                },
+                "external_id": {
+                    "type": "string",
+                    "example": "12"
+                },
+                "ip": {
+                    "type": "string",
+                    "example": "192.168.100.100"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 3,
+                    "example": "Guerrero"
+                }
+            }
+        },
+        "dto.GeneralMessage": {
+            "type": "object",
+            "properties": {
+                "detail": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.GetInvoicePDFResponse": {
+            "type": "object",
+            "properties": {
+                "urlPDF": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.GetPaymentProviderResponse": {
+            "type": "object",
+            "properties": {
+                "business": {
+                    "type": "string"
+                },
+                "customer_id": {
+                    "type": "string"
+                },
+                "payment_provider": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.GroupListAllResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.JwtRefreshRequest": {
+            "type": "object",
+            "required": [
+                "refresh_token"
+            ],
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.JwtResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJpc3MiOiJ0ZXN0IiwiZXhwIjoxNTE2MjM5MDIyfQ.xVuY2FZ_MRXMIEgVQ7J-TFtaucVFRXUzHm9LmV41goM"
+                },
+                "refresh_token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJpc3MiOiJ0ZXN0IiwiZXhwIjoxNTE2MjM5MDIyfQ.xVuY2FZ_MRXMIEgVQ7J-TFtaucVFRXUzHm9LmV41goM"
+                }
+            }
+        },
+        "dto.LevelCreateResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.LevelListAllResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.LevelListResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "discount": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "min_amount": {
+                    "type": "number"
+                },
+                "min_charges": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ListAllCustomersResponse": {
+            "type": "object",
+            "properties": {
+                "first_last_name": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "second_last_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.PaginationResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "format": "array"
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "total_pages": {
+                    "type": "integer"
+                },
+                "total_rows": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.PaymentCrateIntentResponse": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "client_secret": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "total_liter": {
+                    "type": "number"
+                }
+            }
+        },
+        "dto.PaymentDetailCustomer": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "charge_fee": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "events": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "created_at": {
+                                "type": "string"
+                            },
+                            "type": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "fuel_type": {
+                    "type": "string"
+                },
+                "gas_pump": {
+                    "type": "object",
+                    "properties": {
+                        "gas_station": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "number": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "gm_points": {
+                    "type": "number"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "real_amount_reported": {
+                    "type": "number"
+                },
+                "real_discount_applied": {
+                    "type": "number"
+                },
+                "refunded_amount": {
+                    "type": "number"
+                },
+                "total_liter": {
+                    "type": "number"
+                }
+            }
+        },
+        "dto.PaymentListResponse": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "charge_fee": {
+                    "type": "number"
+                },
+                "charge_type": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "customer": {
+                    "type": "object",
+                    "properties": {
+                        "first_last_name": {
+                            "type": "string"
+                        },
+                        "first_name": {
+                            "type": "string"
+                        },
+                        "id": {
+                            "type": "string"
+                        },
+                        "second_last_name": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "discount_per_liter": {
+                    "type": "number"
+                },
+                "events": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "created_at": {
+                                "type": "string"
+                            },
+                            "type": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "external_transaction_id": {
+                    "type": "string"
+                },
+                "fuel_type": {
+                    "type": "string"
+                },
+                "gas_pump": {
+                    "type": "object",
+                    "properties": {
+                        "gas_station": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "id": {
+                            "type": "string"
+                        },
+                        "number": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "gm_points": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "payment_provider": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "real_amount_reported": {
+                    "type": "number"
+                },
+                "refunded_amount": {
+                    "type": "number"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total_liter": {
+                    "type": "number"
+                }
+            }
+        },
+        "dto.Permission": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.PermissionListAllResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ResendInvoiceRequest": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SettinGetAllResponse": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SettingCreateBody": {
+            "type": "object",
+            "required": [
+                "name",
+                "value"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "stripe"
+                },
+                "value": {
+                    "type": "string",
+                    "example": "any_value"
+                }
+            }
+        },
+        "dto.SignInvoiceRequest": {
+            "type": "object",
+            "required": [
+                "cp",
+                "email",
+                "razon_social",
+                "regimen_fiscal",
+                "rfc",
+                "uso_cfdi"
+            ],
+            "properties": {
+                "cp": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "razon_social": {
+                    "type": "string"
+                },
+                "regimen_fiscal": {
+                    "type": "string"
+                },
+                "rfc": {
+                    "type": "string"
+                },
+                "uso_cfdi": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SignInvoiceResponse": {
+            "type": "object",
+            "properties": {
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SynchronizationGetLastSyncResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SynchronizationListDetailResponse": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "string"
+                },
+                "error_text": {
+                    "type": "string"
+                },
+                "external_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SynchronizationListResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "text": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SynchronizationNowQueryRequest": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "gas_pumps",
+                        "gas_stations",
+                        "customer_levels"
+                    ]
+                }
+            }
+        },
+        "dto.UserCreateRequest": {
+            "type": "object",
+            "required": [
+                "active",
+                "email",
+                "first_name",
+                "groups",
+                "is_admin",
+                "last_name",
+                "password",
+                "permissions"
+            ],
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 2
+                },
+                "gas_stations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "is_admin": {
+                    "type": "boolean"
+                },
+                "last_name": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 2
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 3
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "dto.UserDetailResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "gas_stations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_admin": {
+                    "type": "boolean"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "dto.UserListResponse": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "gas_stations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "permissions": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/dto.Permission"
+                                }
+                            }
+                        }
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_admin": {
+                    "type": "boolean"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.Permission"
+                    }
+                }
+            }
+        },
+        "dto.UserMeResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "permissions": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/dto.Permission"
+                                }
+                            }
+                        }
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_admin": {
+                    "type": "boolean"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.Permission"
+                    }
+                }
+            }
+        },
+        "dto.UserUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "first_name": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 2
+                },
+                "gas_stations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "is_admin": {
+                    "type": "boolean"
+                },
+                "last_name": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 2
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 3
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "schemas.PaymentMethod": {
+            "type": "object",
+            "properties": {
+                "card": {
+                    "type": "object",
+                    "properties": {
+                        "brand": {
+                            "type": "string"
+                        },
+                        "last_4": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_last_used": {
+                    "type": "boolean"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "description": "Type \"Bearer\" followed by a space and paste the access token",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}

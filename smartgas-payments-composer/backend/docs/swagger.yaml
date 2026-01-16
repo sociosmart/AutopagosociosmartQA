@@ -1,0 +1,3244 @@
+basePath: /
+definitions:
+  dto.AddEventBodyRequest:
+    properties:
+      amount_charged:
+        type: number
+      type:
+        enum:
+        - serving
+        - serving_paused
+        - served
+        type: string
+    required:
+    - type
+    type: object
+  dto.AuthRequestBody:
+    properties:
+      email:
+        example: hello@world.com
+        type: string
+      password:
+        example: yourpassword
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.BadRequestMessage:
+    properties:
+      field:
+        type: string
+      message:
+        type: string
+    type: object
+  dto.CampaignCreateRequest:
+    properties:
+      active:
+        example: true
+        type: boolean
+      discount:
+        type: number
+      gas_stations:
+        items:
+          properties:
+            id:
+              type: string
+          required:
+          - id
+          type: object
+        type: array
+      name:
+        type: string
+      valid_from:
+        type: string
+      valid_to:
+        type: string
+    required:
+    - discount
+    - name
+    - valid_from
+    - valid_to
+    type: object
+  dto.CampaignDetailResponse:
+    properties:
+      active:
+        type: boolean
+      discount:
+        type: number
+      gas_stations:
+        items:
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+          type: object
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      valid_from:
+        type: string
+      valid_to:
+        type: string
+    type: object
+  dto.CampaignListResponse:
+    properties:
+      active:
+        type: boolean
+      discount:
+        type: number
+      gas_stations:
+        items:
+          properties:
+            name:
+              type: string
+          type: object
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      valid_from:
+        type: string
+      valid_to:
+        type: string
+    type: object
+  dto.CampaignUpdateRequest:
+    properties:
+      active:
+        example: true
+        type: boolean
+      discount:
+        type: number
+      gas_stations:
+        items:
+          properties:
+            id:
+              type: string
+          required:
+          - id
+          type: object
+        type: array
+      name:
+        type: string
+      valid_from:
+        type: string
+      valid_to:
+        type: string
+    type: object
+  dto.CreatePaymentIntentOperationRequest:
+    properties:
+      amount:
+        minimum: 10
+        type: number
+      card_key:
+        type: string
+      charge_type:
+        enum:
+        - customer
+        - card_key
+        type: string
+      external_customer_id:
+        type: string
+      fuel_type:
+        enum:
+        - regular
+        - premium
+        - diesel
+        type: string
+      pump_number:
+        type: string
+    required:
+    - amount
+    - charge_type
+    - fuel_type
+    - pump_number
+    type: object
+  dto.CreatePaymentIntentRequest:
+    properties:
+      amount:
+        minimum: 10
+        type: number
+      charge_type:
+        enum:
+        - by_liter
+        - by_total
+        type: string
+      cvv:
+        type: string
+      fuel_type:
+        enum:
+        - regular
+        - premium
+        - diesel
+        type: string
+      gas_pump_id:
+        example: 23ae8c18-4d7a-41a3-a148-8ae2d0a75690
+        type: string
+      last_4:
+        type: string
+      payment_provider:
+        enum:
+        - stripe
+        - swit
+        - debit
+        type: string
+      source_id:
+        type: string
+      total_liter:
+        minimum: 0.5
+        type: number
+    required:
+    - charge_type
+    - fuel_type
+    - gas_pump_id
+    - payment_provider
+    type: object
+  dto.CustomerLevelAssignedResponse:
+    properties:
+      discount:
+        type: number
+      id:
+        type: string
+      levels_enabled:
+        type: boolean
+      name:
+        type: string
+    type: object
+  dto.CustomerLevelCreateResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  dto.CustomerLevelListResponse:
+    properties:
+      customer_id:
+        type: string
+      elegibility_level_id:
+        type: string
+      id:
+        type: string
+      validity_month:
+        type: integer
+      validity_year:
+        type: integer
+    type: object
+  dto.DoPaymentActionRequest:
+    properties:
+      action:
+        enum:
+        - refund
+        - preset
+        type: string
+    required:
+    - action
+    type: object
+  dto.EelegibilityLevelCreateRequest:
+    properties:
+      active:
+        example: true
+        type: boolean
+      discount:
+        minimum: 0
+        type: number
+      min_amount:
+        minimum: 0
+        type: number
+      min_charges:
+        minimum: 0
+        type: integer
+      name:
+        type: string
+    required:
+    - discount
+    - min_amount
+    - min_charges
+    - name
+    type: object
+  dto.ElegibilityCreateCustomerLevelRequest:
+    properties:
+      customer_id:
+        example: 23ae8c18-4d7a-41a3-a148-8ae2d0a75690
+        type: string
+      elegibility_level_id:
+        example: 23ae8c18-4d7a-41a3-a148-8ae2d0a75690
+        type: string
+      validity_month:
+        maximum: 12
+        minimum: 1
+        type: integer
+      validity_year:
+        maximum: 2030
+        minimum: 2015
+        type: integer
+    required:
+    - customer_id
+    - elegibility_level_id
+    - validity_month
+    - validity_year
+    type: object
+  dto.ElegibilityLevelUpdatesRequest:
+    properties:
+      active:
+        example: true
+        type: boolean
+      discount:
+        minimum: 0
+        type: number
+      min_amount:
+        minimum: 0
+        type: number
+      min_charges:
+        minimum: 0
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.ElegibilityUpdateCustomerLevelRequest:
+    properties:
+      customer_id:
+        example: 23ae8c18-4d7a-41a3-a148-8ae2d0a75690
+        type: string
+      elegibility_level_id:
+        example: 23ae8c18-4d7a-41a3-a148-8ae2d0a75690
+        type: string
+      validity_month:
+        maximum: 12
+        minimum: 1
+        type: integer
+      validity_year:
+        maximum: 2030
+        minimum: 2015
+        type: integer
+    type: object
+  dto.GasPumpCreateRequest:
+    properties:
+      active:
+        example: true
+        type: boolean
+      diesel_price:
+        minimum: 0
+        type: number
+      external_id:
+        type: string
+      gas_station_id:
+        example: 23ae8c18-4d7a-41a3-a148-8ae2d0a75690
+        type: string
+      number:
+        example: 01, 02, 03...
+        minLength: 2
+        type: string
+      premium_price:
+        minimum: 0
+        type: number
+      regular_price:
+        minimum: 0
+        type: number
+    required:
+    - external_id
+    - gas_station_id
+    - number
+    type: object
+  dto.GasPumpCreateResponse:
+    properties:
+      id:
+        example: 23ae8c18-4d7a-41a3-a148-8ae2d0a75690
+        type: string
+    type: object
+  dto.GasPumpGetDetailForCustomerResponse:
+    properties:
+      campaign:
+        properties:
+          discount:
+            type: number
+          name:
+            type: string
+        type: object
+      diesel_price:
+        type: number
+      discount_type:
+        type: string
+      gas_station:
+        properties:
+          city:
+            type: string
+          name:
+            type: string
+          neighborhood:
+            type: string
+          outside_number:
+            type: string
+          state:
+            type: string
+          street:
+            type: string
+          zip_code:
+            type: string
+        type: object
+      number:
+        type: string
+      premium_price:
+        type: number
+      regular_price:
+        type: number
+    type: object
+  dto.GasPumpGetResponse:
+    properties:
+      active:
+        example: true
+        type: boolean
+      diesel_price:
+        type: number
+      external_id:
+        type: string
+      gas_station:
+        properties:
+          external_id:
+            type: string
+          id:
+            type: string
+          name:
+            type: string
+        type: object
+      number:
+        type: string
+      premium_price:
+        type: number
+      regular_price:
+        type: number
+    type: object
+  dto.GasPumpListResponse:
+    properties:
+      active:
+        example: true
+        type: boolean
+      diesel_price:
+        type: number
+      external_id:
+        type: string
+      gas_station_id:
+        type: string
+      id:
+        example: 23ae8c18-4d7a-41a3-a148-8ae2d0a75690
+        type: string
+      number:
+        type: string
+      premium_price:
+        type: number
+      regular_price:
+        type: number
+    type: object
+  dto.GasPumpUpdateRequest:
+    properties:
+      active:
+        example: true
+        type: boolean
+      diesel_price:
+        minimum: 0
+        type: number
+      external_id:
+        example: "12"
+        type: string
+      gas_station_id:
+        example: 23ae8c18-4d7a-41a3-a148-8ae2d0a75690
+        type: string
+      number:
+        example: 01, 02, 03...
+        minLength: 2
+        type: string
+      premium_price:
+        minimum: 0
+        type: number
+      regular_price:
+        minimum: 0
+        type: number
+    type: object
+  dto.GasStationCreateRequest:
+    properties:
+      active:
+        example: true
+        type: boolean
+      cre_permission:
+        example: PL/01/01...
+        type: string
+      external_id:
+        type: string
+      ip:
+        example: 192.168.100.100
+        type: string
+      name:
+        example: Guerrero
+        maxLength: 255
+        minLength: 3
+        type: string
+    required:
+    - cre_permission
+    - external_id
+    - ip
+    - name
+    type: object
+  dto.GasStationCreateResponse:
+    properties:
+      id:
+        example: 23ae8c18-4d7a-41a3-a148-8ae2d0a75690
+        type: string
+    type: object
+  dto.GasStationGetResponse:
+    properties:
+      active:
+        example: true
+        type: boolean
+      cre_permission:
+        type: string
+      external_id:
+        example: "13"
+        type: string
+      ip:
+        example: 192.168.100.100
+        type: string
+      name:
+        example: Guerrero
+        type: string
+    type: object
+  dto.GasStationListAllResponse:
+    properties:
+      id:
+        example: 23ae8c18-4d7a-41a3-a148-8ae2d0a75690
+        type: string
+      ip:
+        example: 192.168.100.100
+        type: string
+      name:
+        example: Guerrero
+        type: string
+    type: object
+  dto.GasStationListResponse:
+    properties:
+      active:
+        example: true
+        type: boolean
+      cre_permission:
+        type: string
+      external_id:
+        example: "13"
+        type: string
+      id:
+        example: 23ae8c18-4d7a-41a3-a148-8ae2d0a75690
+        type: string
+      ip:
+        example: 192.168.100.100
+        type: string
+      name:
+        example: Guerrero
+        type: string
+    type: object
+  dto.GasStationUpdateRequest:
+    properties:
+      active:
+        example: true
+        type: boolean
+      cre_permission:
+        example: PL/01/01...
+        type: string
+      external_id:
+        example: "12"
+        type: string
+      ip:
+        example: 192.168.100.100
+        type: string
+      name:
+        example: Guerrero
+        maxLength: 255
+        minLength: 3
+        type: string
+    type: object
+  dto.GeneralMessage:
+    properties:
+      detail:
+        type: string
+    type: object
+  dto.GetInvoicePDFResponse:
+    properties:
+      urlPDF:
+        type: string
+    type: object
+  dto.GetPaymentProviderResponse:
+    properties:
+      business:
+        type: string
+      customer_id:
+        type: string
+      payment_provider:
+        type: string
+      token:
+        type: string
+    type: object
+  dto.GroupListAllResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.JwtRefreshRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  dto.JwtResponse:
+    properties:
+      access_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJpc3MiOiJ0ZXN0IiwiZXhwIjoxNTE2MjM5MDIyfQ.xVuY2FZ_MRXMIEgVQ7J-TFtaucVFRXUzHm9LmV41goM
+        type: string
+      refresh_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJpc3MiOiJ0ZXN0IiwiZXhwIjoxNTE2MjM5MDIyfQ.xVuY2FZ_MRXMIEgVQ7J-TFtaucVFRXUzHm9LmV41goM
+        type: string
+    type: object
+  dto.LevelCreateResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  dto.LevelListAllResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.LevelListResponse:
+    properties:
+      active:
+        type: boolean
+      discount:
+        type: number
+      id:
+        type: string
+      min_amount:
+        type: number
+      min_charges:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.ListAllCustomersResponse:
+    properties:
+      first_last_name:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      second_last_name:
+        type: string
+    type: object
+  dto.PaginationResponse:
+    properties:
+      data:
+        format: array
+      limit:
+        type: integer
+      page:
+        type: integer
+      total_pages:
+        type: integer
+      total_rows:
+        type: integer
+    type: object
+  dto.PaymentCrateIntentResponse:
+    properties:
+      amount:
+        type: number
+      client_secret:
+        type: string
+      id:
+        type: string
+      total_liter:
+        type: number
+    type: object
+  dto.PaymentDetailCustomer:
+    properties:
+      amount:
+        type: number
+      charge_fee:
+        type: number
+      created_at:
+        type: string
+      events:
+        items:
+          properties:
+            created_at:
+              type: string
+            type:
+              type: string
+          type: object
+        type: array
+      fuel_type:
+        type: string
+      gas_pump:
+        properties:
+          gas_station:
+            properties:
+              name:
+                type: string
+            type: object
+          number:
+            type: string
+        type: object
+      gm_points:
+        type: number
+      price:
+        type: number
+      real_amount_reported:
+        type: number
+      real_discount_applied:
+        type: number
+      refunded_amount:
+        type: number
+      total_liter:
+        type: number
+    type: object
+  dto.PaymentListResponse:
+    properties:
+      amount:
+        type: number
+      charge_fee:
+        type: number
+      charge_type:
+        type: string
+      created_at:
+        type: string
+      customer:
+        properties:
+          first_last_name:
+            type: string
+          first_name:
+            type: string
+          id:
+            type: string
+          second_last_name:
+            type: string
+        type: object
+      discount_per_liter:
+        type: number
+      events:
+        items:
+          properties:
+            created_at:
+              type: string
+            type:
+              type: string
+          type: object
+        type: array
+      external_transaction_id:
+        type: string
+      fuel_type:
+        type: string
+      gas_pump:
+        properties:
+          gas_station:
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+            type: object
+          id:
+            type: string
+          number:
+            type: string
+        type: object
+      gm_points:
+        type: number
+      id:
+        type: string
+      payment_provider:
+        type: string
+      price:
+        type: number
+      real_amount_reported:
+        type: number
+      refunded_amount:
+        type: number
+      status:
+        type: string
+      total_liter:
+        type: number
+    type: object
+  dto.Permission:
+    properties:
+      name:
+        type: string
+    type: object
+  dto.PermissionListAllResponse:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.ResendInvoiceRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  dto.SettinGetAllResponse:
+    properties:
+      name:
+        type: string
+      value:
+        type: string
+    type: object
+  dto.SettingCreateBody:
+    properties:
+      name:
+        example: stripe
+        type: string
+      value:
+        example: any_value
+        type: string
+    required:
+    - name
+    - value
+    type: object
+  dto.SignInvoiceRequest:
+    properties:
+      cp:
+        type: string
+      email:
+        type: string
+      razon_social:
+        type: string
+      regimen_fiscal:
+        type: string
+      rfc:
+        type: string
+      uso_cfdi:
+        type: string
+    required:
+    - cp
+    - email
+    - razon_social
+    - regimen_fiscal
+    - rfc
+    - uso_cfdi
+    type: object
+  dto.SignInvoiceResponse:
+    properties:
+      uuid:
+        type: string
+    type: object
+  dto.SynchronizationGetLastSyncResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+    type: object
+  dto.SynchronizationListDetailResponse:
+    properties:
+      action:
+        type: string
+      created_at:
+        type: string
+      data:
+        type: string
+      error_text:
+        type: string
+      external_id:
+        type: string
+      id:
+        type: string
+    type: object
+  dto.SynchronizationListResponse:
+    properties:
+      created_at:
+        type: string
+      errors:
+        items:
+          properties:
+            text:
+              type: string
+          type: object
+        type: array
+      id:
+        type: string
+      status:
+        type: string
+      type:
+        type: string
+    type: object
+  dto.SynchronizationNowQueryRequest:
+    properties:
+      type:
+        enum:
+        - gas_pumps
+        - gas_stations
+        - customer_levels
+        type: string
+    required:
+    - type
+    type: object
+  dto.UserCreateRequest:
+    properties:
+      active:
+        type: boolean
+      email:
+        type: string
+      first_name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      gas_stations:
+        items:
+          properties:
+            id:
+              type: string
+          required:
+          - id
+          type: object
+        type: array
+      groups:
+        items:
+          properties:
+            id:
+              type: string
+          required:
+          - id
+          type: object
+        type: array
+      is_admin:
+        type: boolean
+      last_name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      password:
+        maxLength: 100
+        minLength: 3
+        type: string
+      permissions:
+        items:
+          properties:
+            id:
+              type: string
+          required:
+          - id
+          type: object
+        type: array
+    required:
+    - active
+    - email
+    - first_name
+    - groups
+    - is_admin
+    - last_name
+    - password
+    - permissions
+    type: object
+  dto.UserDetailResponse:
+    properties:
+      active:
+        type: boolean
+      email:
+        type: string
+      first_name:
+        type: string
+      gas_stations:
+        items:
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+          type: object
+        type: array
+      groups:
+        items:
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+          type: object
+        type: array
+      id:
+        type: string
+      is_admin:
+        type: boolean
+      last_name:
+        type: string
+      permissions:
+        items:
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+          type: object
+        type: array
+    type: object
+  dto.UserListResponse:
+    properties:
+      active:
+        type: boolean
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      gas_stations:
+        items:
+          properties:
+            name:
+              type: string
+          type: object
+        type: array
+      groups:
+        items:
+          properties:
+            name:
+              type: string
+            permissions:
+              items:
+                $ref: '#/definitions/dto.Permission'
+              type: array
+          type: object
+        type: array
+      id:
+        type: string
+      is_admin:
+        type: boolean
+      last_name:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/dto.Permission'
+        type: array
+    type: object
+  dto.UserMeResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      groups:
+        items:
+          properties:
+            name:
+              type: string
+            permissions:
+              items:
+                $ref: '#/definitions/dto.Permission'
+              type: array
+          type: object
+        type: array
+      id:
+        type: string
+      is_admin:
+        type: boolean
+      last_name:
+        type: string
+      permissions:
+        items:
+          $ref: '#/definitions/dto.Permission'
+        type: array
+    type: object
+  dto.UserUpdateRequest:
+    properties:
+      active:
+        type: boolean
+      first_name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      gas_stations:
+        items:
+          properties:
+            id:
+              type: string
+          required:
+          - id
+          type: object
+        type: array
+      groups:
+        items:
+          properties:
+            id:
+              type: string
+          required:
+          - id
+          type: object
+        type: array
+      is_admin:
+        type: boolean
+      last_name:
+        maxLength: 100
+        minLength: 2
+        type: string
+      password:
+        maxLength: 100
+        minLength: 3
+        type: string
+      permissions:
+        items:
+          properties:
+            id:
+              type: string
+          required:
+          - id
+          type: object
+        type: array
+    type: object
+  schemas.PaymentMethod:
+    properties:
+      card:
+        properties:
+          brand:
+            type: string
+          last_4:
+            type: string
+        type: object
+      id:
+        type: string
+      is_last_used:
+        type: boolean
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Smart Gas API Specification
+  version: "1.0"
+paths:
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authorize users
+      parameters:
+      - description: Auth Body
+        in: body
+        name: Auth
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AuthRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Access token & Refresh Token
+          schema:
+            $ref: '#/definitions/dto.JwtResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "404":
+          description: User or password incorrect
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Login
+      tags:
+      - Authorization
+  /api/v1/auth/refresh-token:
+    post:
+      consumes:
+      - application/json
+      description: Authorize users
+      parameters:
+      - description: Auth Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.JwtRefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Access token & Refresh Token
+          schema:
+            $ref: '#/definitions/dto.JwtResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized, token malformed, token invalid, expired, etc
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Refresh Token
+      tags:
+      - Authorization
+  /api/v1/campaigns:
+    get:
+      description: Get Campaigns with pagination
+      parameters:
+      - in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: Search promotion
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Paginated Campaigns
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.CampaignListResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Campaign List
+      tags:
+      - Campaigns
+    post:
+      description: Create campaign with given parameters
+      parameters:
+      - description: Campaign body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CampaignCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "406":
+          description: Foreign key for permission, group, station not exists
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Create Campaign
+      tags:
+      - Campaigns
+  /api/v1/campaigns/{id}:
+    get:
+      description: Get campaign detail
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Campaign Detail
+          schema:
+            $ref: '#/definitions/dto.CampaignDetailResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Get Campaign detail
+      tags:
+      - Campaigns
+    put:
+      description: Update campaign with given parameters
+      parameters:
+      - description: Campaign body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CampaignUpdateRequest'
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "406":
+          description: Foreign key for permission, group, station not exists
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Update Campaign
+      tags:
+      - Campaigns
+  /api/v1/customers/all:
+    get:
+      description: List of all customers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Customers
+          schema:
+            items:
+              $ref: '#/definitions/dto.ListAllCustomersResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: List all customers
+      tags:
+      - Customers
+  /api/v1/customers/level:
+    get:
+      description: List of all customers
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Customer Level
+          schema:
+            $ref: '#/definitions/dto.CustomerLevelAssignedResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not level in this month
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: List all customers
+      tags:
+      - Customers
+  /api/v1/customers/payment-methods:
+    get:
+      description: Get customer's payment methods
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User's profile
+          schema:
+            items:
+              $ref: '#/definitions/schemas.PaymentMethod'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Customer cards
+      tags:
+      - Customers
+  /api/v1/customers/payment-methods-swit:
+    get:
+      description: Get customer's payment methods swit
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User's profile
+          schema:
+            items:
+              $ref: '#/definitions/schemas.PaymentMethod'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Customer cards SWIT
+      tags:
+      - Customers
+  /api/v1/customers/payment-methods/{card_id}:
+    delete:
+      description: Delete a card from customer
+      parameters:
+      - description: id
+        in: path
+        minLength: 1
+        name: card_id
+        required: true
+        type: string
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK if deleted
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Delete a customer card
+      tags:
+      - Customers
+  /api/v1/elegibility/customers/levels:
+    get:
+      description: Paginate Customer Levels
+      parameters:
+      - in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: Lookup in customer levels
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Customer Levels Paginated
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.CustomerLevelListResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Customer Levels List
+      tags:
+      - Elegibility
+  /api/v1/elegibility/customers/levels/:
+    post:
+      description: Create customer level with given parameters
+      parameters:
+      - description: Customer Level create body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ElegibilityCreateCustomerLevelRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CustomerLevelCreateResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "406":
+          description: Foreign key for level, customer not exists
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "409":
+          description: Duplicated entry
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Create customer level
+      tags:
+      - Elegibility
+  /api/v1/elegibility/customers/levels/{id}:
+    put:
+      description: Update customer level with given parameters
+      parameters:
+      - description: Customer Level Update body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ElegibilityUpdateCustomerLevelRequest'
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "406":
+          description: Foreign key for level, customer not exists
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "409":
+          description: Duplicated entry
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Update customer level
+      tags:
+      - Elegibility
+  /api/v1/elegibility/levels:
+    get:
+      description: Paginate Levels
+      parameters:
+      - in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: Lookup in levels
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Levels Paginated
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.LevelListResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: List Levels
+      tags:
+      - Elegibility
+    post:
+      description: Create Elegibility level with given parameters
+      parameters:
+      - description: Elegibility body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EelegibilityLevelCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.LevelCreateResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "409":
+          description: Duplicated entry
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Create Elegibility Level
+      tags:
+      - Elegibility
+  /api/v1/elegibility/levels/{id}:
+    put:
+      description: Update Elegibility Level with given parameters
+      parameters:
+      - description: Campaign body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ElegibilityLevelUpdatesRequest'
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "409":
+          description: Duplicated entry
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Update Elegibility Level
+      tags:
+      - Elegibility
+  /api/v1/elegibility/levels/all:
+    get:
+      description: List of all levels
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Levels
+          schema:
+            items:
+              $ref: '#/definitions/dto.LevelListAllResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: List all levels
+      tags:
+      - Elegibility
+  /api/v1/gas-pumps:
+    get:
+      description: Get paginated gas pumps
+      parameters:
+      - in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: Search in gas stations name, ip it looks up through id, name
+          ip
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Gas station paginated
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.GasPumpListResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Gas Pump List
+      tags:
+      - Gas Pumps
+    post:
+      description: Create Gas Pump
+      parameters:
+      - description: Gas Pump Body
+        in: body
+        name: Data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GasPumpCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Gas station create response
+          schema:
+            $ref: '#/definitions/dto.GasPumpCreateResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "406":
+          description: Not acceptable value for gas_station_id, id does not exist
+            in DB
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "409":
+          description: Duplicated entry
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Gas Pump Create
+      tags:
+      - Gas Pumps
+  /api/v1/gas-pumps/{id}:
+    get:
+      description: Get Gas station detail
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Gas station detail
+          schema:
+            $ref: '#/definitions/dto.GasPumpGetResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Gas Pump Detail
+      tags:
+      - Gas Pumps
+    put:
+      description: Update Gas station
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      - description: Gas station values
+        in: body
+        name: Data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GasPumpUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Record Updated
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "406":
+          description: Not acceptable value for gas_station_id, id does not exist
+            in DB
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "409":
+          description: Duplicated entry
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Gas Pump Update
+      tags:
+      - Gas Pumps
+  /api/v1/gas-pumps/{id}/customer:
+    get:
+      description: Get Gas pump for customer when confirming
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Gas station detail
+          schema:
+            $ref: '#/definitions/dto.GasPumpGetDetailForCustomerResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Gas Pump Detail customer
+      tags:
+      - Gas Pumps
+  /api/v1/gas-stations:
+    get:
+      description: Get paginated gas stations
+      parameters:
+      - in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: Search in gas stations, it looks up through id, name ip
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Gas station paginated
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.GasStationListResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Gas Station List
+      tags:
+      - Gas Stations
+    post:
+      description: Create Gas Station
+      parameters:
+      - description: Gas Station Body
+        in: body
+        name: Data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GasStationCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Gas station create response
+          schema:
+            $ref: '#/definitions/dto.GasStationCreateResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "409":
+          description: Duplicated entry
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Gas Station Create
+      tags:
+      - Gas Stations
+  /api/v1/gas-stations/{id}:
+    get:
+      description: Get Gas station detail
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Gas station detail
+          schema:
+            $ref: '#/definitions/dto.GasStationGetResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Gas Station Detail
+      tags:
+      - Gas Stations
+    put:
+      description: Update Gas station
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      - description: Gas station values
+        in: body
+        name: Data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GasStationUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Record Updated
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "409":
+          description: Duplicated entry
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Gas Station Update
+      tags:
+      - Gas Stations
+  /api/v1/gas-stations/all:
+    get:
+      description: Get all gas stations
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Gas stations
+          schema:
+            items:
+              $ref: '#/definitions/dto.GasStationListAllResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Gas Station List All
+      tags:
+      - Gas Stations
+  /api/v1/payments:
+    get:
+      description: Payment List
+      parameters:
+      - in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: Lookup in payments
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Payments paginated
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.PaymentListResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Payment List
+      tags:
+      - Payments
+  /api/v1/payments/{id}/customer-detail:
+    get:
+      description: Payment detail for customer
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Payment Detail for customer
+          schema:
+            $ref: '#/definitions/dto.PaymentDetailCustomer'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Payment id not found in db, payment not paid yet
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Payment Detail Customer
+      tags:
+      - Payments
+  /api/v1/payments/{id}/events:
+    post:
+      description: Add event to payment
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 39
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      - description: Add event for payment
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AddEventBodyRequest'
+      - description: App Key
+        in: header
+        name: APP-KEY
+        required: true
+        type: string
+      - description: Api Key
+        in: header
+        name: API-KEY
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "402":
+          description: Payment Required
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Payment id not found in db
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "406":
+          description: Already Served
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Add event to payment
+      tags:
+      - Payments
+  /api/v1/payments/actions/{id}:
+    post:
+      description: Manual action for payment
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      - description: Do action for payment
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DoPaymentActionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: done
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Do payment action
+      tags:
+      - Payments
+  /api/v1/payments/create-intent:
+    post:
+      description: Create Payment intent in order to refuel gas
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Create payment intent to charge fuel
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePaymentIntentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Payment intent information
+          schema:
+            $ref: '#/definitions/dto.PaymentCrateIntentResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "402":
+          description: Payment Required, Unsufficient funds
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "406":
+          description: Not fuel type in gas pump
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Create Payment intent
+      tags:
+      - Payments
+  /api/v1/payments/create-intent-operation:
+    post:
+      description: Creaate Payment intent from opertion app with employee credentials
+      parameters:
+      - description: Create payment intent to charge fuel from operation app
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePaymentIntentOperationRequest'
+      - description: Gas Station ID
+        in: header
+        name: X-GAS-STATION-ID
+        required: true
+        type: string
+      - description: Employee ID
+        in: header
+        name: X-EMPLOYEE-ID
+        required: true
+        type: string
+      - description: Employee NIP
+        in: header
+        name: X-EMPLOYEE-NIP
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Payment intent information
+          schema:
+            $ref: '#/definitions/dto.PaymentCrateIntentResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "402":
+          description: Payment Required, Unsufficient funds
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Whether gas station or pump not found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "406":
+          description: Not fuel type in gas pump
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Create Payment intent from operation app
+      tags:
+      - Payments
+  /api/v1/payments/invoicing/{id}:
+    post:
+      description: Make invoicing for a customer payment
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Body for invocing
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SignInvoiceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Response with uuid
+          schema:
+            $ref: '#/definitions/dto.SignInvoiceResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "406":
+          description: Not accepted
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "409":
+          description: Already invoiced
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "412":
+          description: Data sent bad
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Invoice payment
+      tags:
+      - Payments
+  /api/v1/payments/invoicing/{id}/pdf:
+    get:
+      description: Get PDF File from already generated invoice
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: PDF
+          schema:
+            $ref: '#/definitions/dto.GetInvoicePDFResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Get PDF from invoice
+      tags:
+      - Payments
+  /api/v1/payments/invoicing/{id}/resend:
+    post:
+      description: Resend invoice previously invoiced
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Body for invocing
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ResendInvoiceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Invoice payment Resend
+      tags:
+      - Payments
+  /api/v1/payments/provider:
+    get:
+      description: Payment provider for stripe or swit
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Payment Provider
+          schema:
+            $ref: '#/definitions/dto.GetPaymentProviderResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Payment provider
+      tags:
+      - Payments
+  /api/v1/permissions/all:
+    get:
+      description: Get all available permissions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Gas stations
+          schema:
+            items:
+              $ref: '#/definitions/dto.PermissionListAllResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Get all permissions
+      tags:
+      - Permissions
+  /api/v1/permissions/all-groups:
+    get:
+      description: Get all available permissions groups
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Gas stations
+          schema:
+            items:
+              $ref: '#/definitions/dto.GroupListAllResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Get all permission groups
+      tags:
+      - Permissions
+  /api/v1/settings:
+    get:
+      consumes:
+      - application/json
+      description: Endpoint to gather all settings
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: All settings
+          schema:
+            items:
+              $ref: '#/definitions/dto.SettinGetAllResponse'
+            type: array
+        "401":
+          description: Unauthorized, token malformed, token invalid, expired, etc
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Get All settings
+      tags:
+      - Settings
+  /api/v1/settings/:
+    post:
+      description: Update or create specific setting
+      parameters:
+      - description: Setting Create or Update Body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SettingCreateBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated or created
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Update setting
+      tags:
+      - Settings
+  /api/v1/synchronizations:
+    get:
+      description: Get paginated synchronizations
+      parameters:
+      - in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - in: query
+        minimum: 1
+        name: page
+        type: integer
+      - enum:
+        - gas_pumps
+        - gas_stations
+        - customer_levels
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Synchronizations List
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.SynchronizationListResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Synchronization List
+      tags:
+      - Synchronization
+  /api/v1/synchronizations/{id}/details:
+    get:
+      description: Get paginated synchronizations detail List
+      parameters:
+      - in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Synchronizations Detail List
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.SynchronizationListDetailResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Synchronization Detail List
+      tags:
+      - Synchronization
+  /api/v1/synchronizations/last:
+    get:
+      consumes:
+      - application/json
+      description: Get last synchronization
+      parameters:
+      - enum:
+        - gas_pumps
+        - gas_stations
+        - customer_levels
+        in: query
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Access token & Refresh Token
+          schema:
+            $ref: '#/definitions/dto.SynchronizationGetLastSyncResponse'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Last Synchronization
+      tags:
+      - Synchronization
+  /api/v1/synchronizations/now:
+    post:
+      consumes:
+      - application/json
+      description: Synchronize gas pumps, gas stations or all
+      parameters:
+      - description: Sync type
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SynchronizationNowQueryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Synchronized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "423":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Sync Now
+      tags:
+      - Synchronization
+  /api/v1/users:
+    get:
+      description: Paginate users
+      parameters:
+      - in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: Lookup in users
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Users Paginated
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.PaginationResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.UserListResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: List users
+      tags:
+      - Users
+    post:
+      description: Create user with given parameters
+      parameters:
+      - description: User body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "406":
+          description: Foreign key for permission, group, station not exists
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "409":
+          description: Email already taken
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Create User
+      tags:
+      - Users
+  /api/v1/users/{id}:
+    get:
+      description: Get user detail by id
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User detail
+          schema:
+            $ref: '#/definitions/dto.UserDetailResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Get user detail
+      tags:
+      - Users
+    put:
+      description: Update a user by id
+      parameters:
+      - description: uuid4 id
+        in: path
+        maxLength: 36
+        minLength: 36
+        name: id
+        required: true
+        type: string
+      - description: User body
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "400":
+          description: Bad Request, failed on body, form, query...
+          schema:
+            items:
+              $ref: '#/definitions/dto.BadRequestMessage'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "406":
+          description: Foreign key for permission, group, station not exists
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: Update user
+      tags:
+      - Users
+  /api/v1/users/me:
+    get:
+      description: Get user's information
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User's profile
+          schema:
+            $ref: '#/definitions/dto.UserMeResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      security:
+      - Bearer: []
+      summary: User Me
+      tags:
+      - Users
+  /healthcheck:
+    get:
+      description: Authorize users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Shows healthy if server is running
+          schema:
+            $ref: '#/definitions/dto.GeneralMessage'
+      summary: Show health check
+      tags:
+      - HealthCheck
+securityDefinitions:
+  Bearer:
+    description: Type "Bearer" followed by a space and paste the access token
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

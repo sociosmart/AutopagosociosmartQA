@@ -1,0 +1,2 @@
+class SwitNotFundsOrIncorrectException(Exception):
+    pass

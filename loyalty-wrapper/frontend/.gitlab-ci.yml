@@ -1,0 +1,26 @@
+stages:
+  - deploy
+
+pages:
+  stage: deploy
+  image: node:23.7-alpine3.20
+  cache:
+    key:
+      files:
+        - yarn-lock.json
+      prefix: yarn
+    paths:
+      - node_modules/
+  before_script:
+    - yarn install
+    - npx vite build --mode staging
+  script:
+    - cp -a dist/. public/
+    - echo "/* /index.html 200" > public/_redirects
+    - echo "Site deployed to $CI_PAGES_URL"
+    - cat public/_redirects
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
