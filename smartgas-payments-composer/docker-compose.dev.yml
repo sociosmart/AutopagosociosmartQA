@@ -1,0 +1,37 @@
+services:
+  backend:
+    volumes:
+      - "./backend:/usr/src/backend"
+    ports:
+      - "8008:8008"
+    env_file: ".env.backend"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      target: base
+    container_name: smartgas-payment-frontend
+    command: "yarn dev"
+    volumes:
+      - "./frontend:/usr/src/frontend"
+      - "/usr/src/frontend/node_modules"
+    ports:
+      - "3000:3000"
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8081:80
+    environment:
+      - PMA_HOST=db
+    env_file:
+      - .env.db
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mariadb:

@@ -1,0 +1,61 @@
+x-common-db-variables: &db-common-variables
+  - MARIADB_DATABASE=debit
+  - MARIADB_USER=debit
+  - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
+  - MARIADB_PASSWORD=123456
+  - PMA_HOST=db
+
+x-common-variables: &common-variables
+  - "SQLALCHEMY_DATABASE_URI=mysql+pymysql://debit:123456@db/debit"
+  - "SMARTGAS_API_URL=https://sociosmart.ddns.net"
+  - "FLASK_APP=app"
+  - "SENTRY_DSN=https://7c954bcc1e80cbe524bc21bfb7a7bc52@o4505780279967744.ingest.us.sentry.io/4508210808356864"
+  - "SENTRY_ENABLED=1"
+  - "SWIT_API_URL=${SWIT_API_URL}"
+  - "SWIT_BUSINESS=${SWIT_BUSINESS}"
+  - "SWIT_TOKEN=${SWIT_TOKEN}"
+  - "SWIT_API_KEY=${SWIT_API_KEY}"
+  - "DEBUG=0"
+  - "ENVIRONMENT=qa"
+
+services:
+  db:
+    image: mariadb
+    restart: always
+    volumes:
+      - "mariadb:/var/lib/mysql"
+    environment: *db-common-variables
+    # env_file:
+    #   - ".env.db"
+    # healthcheck:
+    #   test: "mariadb --user=$$MARIADB_USER --password=$$MARIADB_PASSWORD --execute=\"SHOW DATABASES;\""
+    #   interval: 2s
+    #   timeout: 20s
+    #   retries: 10
+  #
+  phpmyadmin:
+    image: phpmyadmin
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    environment: *db-common-variables
+    # env_file:
+    #   - .env.db
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+
+  api:
+    build: ./backend
+    command: "flask run --port 8005 --host 0.0.0.0"
+    restart: unless-stopped
+    ports:
+      - 8005:8005
+    volumes:
+      - "./backend:/usr/src/backend"
+    environment: *common-variables
+    depends_on:
+      - db
+
+volumes:
+  mariadb:

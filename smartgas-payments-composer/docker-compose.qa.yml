@@ -1,0 +1,101 @@
+version: '3.9'
+
+services:
+  db:
+    restart: always
+
+  traefik:
+    image: traefik:v2.9
+    container_name: "traefik"
+    restart: unless-stopped
+    command:
+      - "--log.level=INFO"
+      #- "--api.insecure=true"
+      #- "--api=true"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
+      #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.letsencrypt.acme.email=mesterlum@hotmail.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # Clouflare
+      - "--entrypoints.https.forwardedHeaders.trustedIPs=173.245.48.0/20,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/12,172.64.0.0/13,131.0.72.0/22"
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge.resolvers[0]=1.1.1.1:53"
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge.resolvers[1]=1.0.0.1:53"
+
+    ports:
+      - "80:80"
+      - "443:443"
+      #- "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt/"
+    environment:
+      - "CF_API_EMAIL=$CF_API_EMAIL"
+      - "CF_DNS_API_TOKEN=$CF_DNS_API_TOKEN"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`qa-traefik.smartgasautopago.mx`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=$BASIC_AUTH_USERS"
+
+  backend:
+    restart: unless-stopped
+    healthcheck:
+      test: "curl -f localhost:8008/healthcheck"
+      interval: 5s
+      timeout: 2s
+      retries: 10
+      start_period: 5s
+    volumes:
+      - "./backend:/usr/src/backend"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`qa-payments.smartgasautopago.mx`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.services.backend.loadbalancer.server.port=8008"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.backend.tls=true"
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - "./frontend:/usr/src/frontend"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`qa-payments.smartgasautopago.mx`) && PathPrefix(`/admin`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend.tls=true"
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    environment:
+      - PMA_HOST=db
+    depends_on:
+      db:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`qa-db.smartgasautopago.mx`)"
+      - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
+      - "traefik.http.routers.phpmyadmin.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.phpmyadmin.tls=true"
+
+  schedule-sync:
+    restart: always

@@ -1,0 +1,33 @@
+services:
+  db:
+    image: mariadb
+    container_name: sg-payments-db
+    volumes:
+      - "mariadb:/var/lib/mysql"
+    env_file:
+      - ".env.db"
+    healthcheck:
+      test: 'mariadb --user=$$MARIADB_USER --password=$$MARIADB_PASSWORD --execute="SHOW DATABASES;"'
+      interval: 2s
+      timeout: 20s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: smartgas-payment-backend
+    env_file: ".env.backend"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  schedule-sync:
+    build: ./backend
+    container_name: smartgas-payment-sync
+    env_file: ".env.backend"
+    command: /go/bin/app scheduleSync
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mariadb:

@@ -1,0 +1,60 @@
+services:
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  backend:
+    container_name: loyalty-backend
+    build:
+      context: ./backend
+      target: dev
+    ports:
+      - "8000:8000"
+    command: python main.py
+    env_file: .env.backend
+    volumes:
+      - "./backend:/usr/src/app"
+    depends_on:
+      - mongo
+
+  redis:
+    image: redis:8.0.2-alpine
+    volumes:
+      - redis_cache:/data
+
+  scheduler:
+    build:
+      context: ./backend
+      target: prod
+    command: "celery -A sync beat --loglevel INFO"
+    volumes:
+      - "./backend:/usr/src/app"
+    env_file:
+      - ".env.backend"
+    depends_on:
+      - mongo
+      - redis
+
+  worker:
+    build:
+      context: ./backend
+      target: prod
+    command: "celery -A sync worker --loglevel INFO"
+    volumes:
+      - "./backend:/usr/src/app"
+    env_file:
+      - ".env.backend"
+    depends_on:
+      - mongo
+      - redis
+
+volumes:
+  mongo_data:
+  redis_cache:
